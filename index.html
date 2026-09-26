@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>杨亚东 / Yang Yadong — Unity 客户端开发</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #fafafa; color: #24292f; line-height: 1.7;
+  }
+  .container { max-width: 980px; margin: 0 auto; padding: 40px 20px; }
+
+  /* 语言切换 */
+  .lang-switch {
+    position: fixed; top: 20px; right: 20px; z-index: 100;
+    background: #fff; border: 1px solid #d0d7de; border-radius: 20px;
+    padding: 6px 14px; cursor: pointer; font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.06);
+  }
+  .lang-switch:hover { background: #f3f4f6; }
+
+  /* 头部 */
+  header { text-align: center; padding: 50px 0 30px; }
+  .avatar {
+    width: 110px; height: 110px; border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0 auto 18px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 40px; font-weight: bold;
+  }
+  h1 { font-size: 28px; margin-bottom: 6px; }
+  .title { color: #57606a; font-size: 16px; margin-bottom: 14px; }
+  .bio { color: #57606a; font-size: 15px; max-width: 640px; margin: 0 auto 18px; }
+  .contact { margin-top: 10px; font-size: 14px; color: #57606a; }
+  .contact a { color: #0969da; text-decoration: none; margin: 0 8px; }
+  .contact a:hover { text-decoration: underline; }
+
+  /* 亮点条 */
+  .highlights {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px; margin: 30px 0;
+  }
+  .highlight {
+    background: #fff; border: 1px solid #d0d7de; border-radius: 8px;
+    padding: 16px; text-align: center;
+  }
+  .highlight .num { font-size: 24px; font-weight: 700; color: #0969da; }
+  .highlight .label { font-size: 13px; color: #57606a; margin-top: 4px; }
+
+  h2 {
+    font-size: 22px; margin: 50px 0 20px;
+    padding-bottom: 10px; border-bottom: 1px solid #d0d7de;
+  }
+
+  /* 技能 */
+  .skills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill {
+    background: #ddf4ff; color: #0969da; padding: 5px 12px;
+    border-radius: 14px; font-size: 13px;
+  }
+
+  /* 项目卡片 */
+  .projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+  .card {
+    background: #fff; border: 1px solid #d0d7de; border-radius: 10px;
+    overflow: hidden; transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+  .card .thumb {
+    height: 160px; background: linear-gradient(135deg, #eef1f4, #d8dde3);
+    display: flex; align-items: center; justify-content: center;
+    color: #8b949e; font-size: 13px; overflow: hidden;
+  }
+  .card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card .body { padding: 16px 18px; }
+  .card h3 { font-size: 17px; margin-bottom: 4px; }
+  .card .meta { font-size: 12px; color: #8b949e; margin-bottom: 10px; }
+  .card p { color: #57606a; font-size: 14px; margin-bottom: 10px; }
+  .card .tags { margin-top: 8px; }
+  .tag {
+    display: inline-block; padding: 2px 8px; margin-right: 6px; margin-bottom: 4px;
+    background: #ddf4ff; color: #0969da; border-radius: 12px; font-size: 12px;
+  }
+
+  /* 经历时间线 */
+  .timeline { border-left: 2px solid #d0d7de; padding-left: 20px; margin-left: 8px; }
+  .job { margin-bottom: 24px; }
+  .job h4 { font-size: 16px; }
+  .job .period { font-size: 13px; color: #8b949e; margin-bottom: 6px; }
+  .job p { font-size: 14px; color: #57606a; }
+
+  footer { text-align: center; margin-top: 60px; padding: 20px; color: #8b949e; font-size: 13px; }
+
+  .en { display: none; }
+  body.en-mode .zh { display: none; }
+  body.en-mode .en { display: block; }
+  body.en-mode .en.inline { display: inline; }
+</style>
+</head>
+<body>
+
+<button class="lang-switch" onclick="toggleLang()">
+  <span class="zh">EN | 中文</span>
+  <span class="en inline">中 | EN</span>
+</button>
+
+<div class="container">
+
+  <header>
+    <div class="avatar">杨</div>
+    <h1>
+      <span class="zh">杨亚东</span>
+      <span class="en">Yang Yadong</span>
+    </h1>
+    <div class="title">
+      <span class="zh">Unity 客户端开发工程师 · 9 年经验</span>
+      <span class="en">Unity Client Engineer · 9 Years Experience</span>
+    </div>
+    <p class="bio">
+      <span class="zh">8 年 Unity 全流程开发经验，主导多款海外上线商业项目。擅长 ECS 架构、HybridCLR 热更新、移动端性能优化，有从 0 到 1 搭建项目技术框架与海量实体同屏攻坚的实战经验。</span>
+      <span class="en">8+ years of Unity end-to-end development, leading multiple shipped overseas titles. Specialized in ECS architecture, HybridCLR hot-update, mobile performance optimization, and scaling to 30k+ concurrent entities on screen.</span>
+    </p>
+    <div class="contact">
+      📧 2895680850@qq.com &nbsp;·&nbsp; 📱 17610887670
+    </div>
+  </header>
+
+  <div class="highlights">
+    <div class="highlight">
+      <div class="num">Top 10</div>
+      <div class="label zh">英国 App Store 模拟经营榜</div>
+      <div class="label en">UK App Store Tycoon Chart</div>
+    </div>
+    <div class="highlight">
+      <div class="num">30,000+</div>
+      <div class="label zh">同屏物理实体</div>
+      <div class="label en">Concurrent entities on screen</div>
+    </div>
+    <div class="highlight">
+      <div class="num">¥2M</div>
+      <div class="label zh">直播玩法峰值日流水</div>
+      <div class="label en">Peak daily revenue / live-ops</div>
+    </div>
+    <div class="highlight">
+      <div class="num">9 年</div>
+      <div class="label zh">游戏客户端经验</div>
+      <div class="label en">Years in game dev</div>
+    </div>
+  </div>
+
+  <h2><span class="zh">核心技能</span><span class="en">Core Skills</span></h2>
+  <div class="skills">
+    <span class="skill">Unity</span>
+    <span class="skill">C#</span>
+    <span class="skill">Lua</span>
+    <span class="skill">ECS</span>
+    <span class="skill">HybridCLR</span>
+    <span class="skill">IL2CPP</span>
+    <span class="skill">URP</span>
+    <span class="skill">Shader</span>
+    <span class="skill">Addressables</span>
+    <span class="skill">AI 行为树</span>
+    <span class="skill">对象池</span>
+    <span class="skill">移动端性能优化</span>
+    <span class="skill">Git</span>
+    <span class="skill">Jenkins</span>
+    <span class="skill">VR / HTC Vive</span>
+    <span class="skill">Cocos2d</span>
+  </div>
+
+  <h2><span class="zh">精选项目</span><span class="en">Selected Projects</span></h2>
+  <div class="projects">
+
+    <div class="card">
+      <div class="thumb"><img src="kachetaowang.png" alt="卡车逃亡"></div>
+      <div class="body">
+        <h3><span class="zh">卡车逃亡 · 直播互动玩法</span><span class="en">Truck Escape · Live-Interaction Game</span></h3>
+        <div class="period">
+          <span class="zh">技术负责人 · 2025.01 – 2025.07</span>
+          <span class="en">Tech Lead · 2025.01 – 2025.07</span>
+        </div>
+        <p>
+          <span class="zh">弹幕驱动型直播玩法，观众通过礼物触发事件操控卡车对抗丧尸潮。基于 ECS 架构解耦逻辑与渲染，同屏稳定管理 30000+ 物理实体；通过批次渲染、逻辑帧降频攻克高并发帧率瓶颈。</span>
+          <span class="en">Danmaku-driven live-stream game where viewers trigger events via gifts. Built on ECS to decouple logic from rendering, smoothly managing 30,000+ physical entities; solved frame-rate bottleneck with batched rendering and logic-throttle.</span>
+        </p>
+        <p style="color:#0969da; font-size:13px;">
+          <span class="zh">🏆 上线连续一周峰值日流水 ¥200 万</span>
+          <span class="en">🏆 Peak daily revenue ¥2M for one week after launch</span>
+        </p>
+        <div class="tags">
+          <span class="tag">ECS</span><span class="tag">直播互动</span><span class="tag">高并发</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb"><img src="sangshitaowang.png" alt="ZomBuilder"></div>
+      <div class="body">
+        <h3><span class="zh">ZomBuilder · 丧尸生存模拟</span><span class="en">ZomBuilder · Zombie Survival Sim</span></h3>
+        <div class="period">
+          <span class="zh">客户端负责人 · 2022.02 – 2023.11</span>
+          <span class="en">Client Lead · 2022.02 – 2023.11</span>
+        </div>
+        <p>
+          <span class="zh">Lowpoly 末世丧尸题材模拟经营，海外 Google Play 上线。主导框架搭建、角色 AI 与核心玩法；首次落地 HybridCLR 实现 C# 脚本热更，使用行为树实现 NPC 复杂 AI，Profiler 优化支持千级物体同屏。</span>
+          <span class="en">Lowpoly post-apocalyptic tycoon, shipped on Google Play. Owned framework, NPC AI and core gameplay; first-time HybridCLR C# hot-update; behavior-tree AI; profiler-driven optimization for 1000+ objects on screen.</span>
+        </p>
+        <p style="color:#0969da; font-size:13px;">
+          <span class="zh">🏆 次日留存 50%+，上线 3 个月收回研发成本</span>
+          <span class="en">🏆 D1 retention 50%+, R&D cost recouped in 3 months</span>
+        </p>
+        <div class="tags">
+          <span class="tag">HybridCLR</span><span class="tag">行为树</span><span class="tag">海外发行</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb"><img src="tdr.png" alt="Idle Knockout Park Tycoon 3D"></div>
+      <div class="body">
+        <h3><span class="zh">Idle Knockout Park Tycoon 3D</span><span class="en">Idle Knockout Park Tycoon 3D</span></h3>
+        <div class="period">
+          <span class="zh">客户端负责人 · 2020.08 – 2022.02</span>
+          <span class="en">Client Lead · 2020.08 – 2022.02</span>
+        </div>
+        <p>
+          <span class="zh">糖豆人风格 3D 放置模拟经营手游，主打欧美女性市场，上线 Google Play 与 iOS App Store。搭建整体技术框架，负责经济系统、角色 AI、商场系统；基于 MD5 校验实现 AB 包热更，Shader 烘焙解决包体过大问题。</span>
+          <span class="en">Fall Guys-style 3D idle tycoon targeting Western female players, shipped on Google Play & iOS. Built the client framework; owned economy, character AI and mall systems; MD5-verified asset hot-update; shader-baking to cut package size.</span>
+        </p>
+        <p style="color:#0969da; font-size:13px;">
+          <span class="zh">🏆 登顶英国 App Store 模拟经营榜 Top 10，7 日留存 35%+</span>
+          <span class="en">🏆 UK App Store Tycoon Top 10, D7 retention 35%+</span>
+        </p>
+        <div class="tags">
+          <span class="tag">放置模拟</span><span class="tag">URP</span><span class="tag">休闲出海</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb"><img src="xchunyongzhe.png" alt="香椿勇者"></div>
+      <div class="body">
+        <h3><span class="zh">香椿勇者 · Roguelike 手游</span><span class="en">Chunky Hero · Roguelike Mobile</span></h3>
+        <div class="period">
+          <span class="zh">核心开发 · 2020.01 – 2020.08</span>
+          <span class="en">Core Developer · 2020.01 – 2020.08</span>
+        </div>
+        <p>
+          <span class="zh">单机 Roguelike，玩法参考《元气骑士》，广告+内购混合变现。负责怪物 AI、自定义摇杆与核心战斗逻辑；通过继承机制实现差异化怪物行为，重封装触摸函数实现自定义方向摇杆。</span>
+          <span class="en">Single-player roguelike inspired by Soul Knight, ad + IAP hybrid monetization. Owned monster AI, custom joystick and core combat; inheritance-based enemy behaviors; low-level touch re-wrapping for a custom virtual stick.</span>
+        </p>
+        <div class="tags">
+          <span class="tag">Roguelike</span><span class="tag">战斗系统</span><span class="tag">移动端</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb"><img src="jianjiaodasha.png" alt="尖叫大厦"></div>
+      <div class="body">
+        <h3><span class="zh">尖叫大厦 · 3D 丧尸跑酷</span><span class="en">Scream Tower · 3D Zombie Runner</span></h3>
+        <div class="period">
+          <span class="zh">客户端核心开发 · 2019.10 – 2020.01</span>
+          <span class="en">Core Client Dev · 2019.10 – 2020.01</span>
+        </div>
+        <p>
+          <span class="zh">3D 丧尸跑酷小游戏，牵头前期框架与核心玩法。完成触摸交互、场景交互、关卡流转；实现怪物 AI 巡逻/追击/触发，编写多阶段场景 Shader，完成 TCP 联网与多平台适配。</span>
+          <span class="en">3D zombie runner, led early framework and core gameplay. Touch/scene interactions, level flow; patrol/chase/trigger monster AI; multi-stage scene shaders; TCP netplay and multi-platform adaptation.</span>
+        </p>
+        <div class="tags">
+          <span class="tag">跑酷</span><span class="tag">Shader</span><span class="tag">联网</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb"><img src="mythy.png" alt="猫与桃花源"></div>
+      <div class="body">
+        <h3><span class="zh">猫与桃花源 · IP 定制手游</span><span class="en">Cats and Peachtopia · Licensed IP</span></h3>
+        <div class="period">
+          <span class="zh">独立客户端开发 · 2018.03 – 2018.04</span>
+          <span class="en">Solo Client Dev · 2018.03 – 2018.04</span>
+        </div>
+        <p>
+          <span class="zh">与光线影业合作同名 IP 休闲手游，独立完成客户端全模块：登录、背包、商城、场景交互。基于 Animator 实现多性格猫咪 AI（自主活动、外出旅行带回纪念品），接入 SharesDK 截屏分享。</span>
+          <span class="en">Licensed casual title co-developed with Enlight Pictures. Solo client across login, inventory, shop and scene interaction. Animator-driven multi-personality cat AI (wander, travel, bring souvenirs); SharesDK screenshot sharing.</span>
+        </p>
+        <p style="color:#0969da; font-size:13px;">
+          <span class="zh">🏆 为公司创造 ¥50 万项目收益</span>
+          <span class="en">🏆 ¥500K project revenue for the studio</span>
+        </p>
+        <div class="tags">
+          <span class="tag">IP 定制</span><span class="tag">独立交付</span><span class="tag">治愈系</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="body">
+        <h3><span class="zh">企业级 VR 定制项目系列</span><span class="en">Enterprise VR Projects</span></h3>
+        <div class="period">
+          <span class="zh">VR 客户端开发 · 北京图灵智能</span>
+          <span class="en">VR Client Dev · Beijing Turing Intelligence</span>
+        </div>
+        <p>
+          <span class="zh">图灵 VR 游戏平台、内蒙古消防培训、《飞夺泸定桥》历史体验等政企项目。基于 Unity 实现 HTC Vive 手柄交互、VR 场景漫游、数据管理与关卡切换，独立跟进从需求到现场展出全流程。</span>
+          <span class="en">Turing VR platform, Inner-Mongolia fire-fighter training, "Crossing the Dadu River" history experience and more. Unity + HTC Vive interaction, VR roaming, data management, level switching; owned delivery from brief to on-site exhibition.</span>
+        </p>
+        <p style="color:#0969da; font-size:13px;">
+          <span class="zh">🏆 VR 消防项目亮相国际消防展；渭南职高项目回款 ¥70 万</span>
+          <span class="en">🏆 VR firefighting shown at int'l expo; Weinan vocational project ¥700K delivered</span>
+        </p>
+        <div class="tags">
+          <span class="tag">VR</span><span class="tag">HTC Vive</span><span class="tag">政企交付</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <h2><span class="zh">工作经历</span><span class="en">Experience</span></h2>
+  <div class="timeline">
+    <div class="job">
+      <h4>上海蜥金网络科技有限公司 · U3D</h4>
+      <div class="period">2024.06 – 2026.09</div>
+      <p>
+        <span class="zh">直播互动游戏技术选型与架构设计；基于 ECS 重构《卡车逃亡》，同屏 3 万+ 实体；推动 AI 辅助编程与 Jenkins 自动化部署，团队效率提升约 30%。</span>
+        <span class="en">Tech selection & architecture for live-stream interactive titles; ECS rewrite of Truck Escape (30k+ entities); drove AI-assisted coding and Jenkins CI, lifting team efficiency ~30%.</span>
+      </p>
+    </div>
+    <div class="job">
+      <h4>上海游斐网络科技有限公司 · U3D</h4>
+      <div class="period">2020 – 2024</div>
+      <p>
+        <span class="zh">主导 4 款海外上线商业项目（欧美、东南亚），覆盖休闲模拟与生存建造；搭建技术规范、性能标准与 URP 管线，落地 HybridCLR 热更。</span>
+        <span class="en">Led 4 shipped overseas titles (EU/US/SEA) across casual sim and survival; set tech standards, performance budgets and URP pipeline; rolled out HybridCLR hot-update.</span>
+      </p>
+    </div>
+    <div class="job">
+      <h4>中星智慧科技（北京）有限公司 · U3D</h4>
+      <div class="period">2018 – 2020</div>
+      <p>
+        <span class="zh">Unity / Cocos 双引擎手游开发，覆盖二次元 RPG、横版卡牌、IP 定制；独立交付《猫与桃花源》客户端。</span>
+        <span class="en">Unity / Cocos dual-engine mobile titles — anime RPG, side-scroller card game, licensed IP; solo delivery of "Cats and Peachtopia" client.</span>
+      </p>
+    </div>
+    <div class="job">
+      <h4>北京图灵智能科技有限公司 · U3D</h4>
+      <div class="period">2017 – 2018</div>
+      <p>
+        <span class="zh">企业级 VR 项目客户端开发，HTC Vive 交互、VR 场景漫游，多个政企项目现场交付。</span>
+        <span class="en">Enterprise VR client dev; HTC Vive interaction and VR roaming; on-site delivery for multiple government & enterprise clients.</span>
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 Yang Yadong · Built with GitHub Pages
+  </footer>
+
+</div>
+
+<script>
+  function toggleLang() {
+    document.body.classList.toggle('en-mode');
+  }
+</script>
+
+</body>
+</html>
